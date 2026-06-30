@@ -1,0 +1,1102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayScape | Luxury Vacation Rentals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --primary:#4cc9f0;
+            --secondary:#7b2cbf;
+            --accent:#ff4d8d;
+            --gold:#ffd166;
+            --bg:#08111f;
+            --bg2:#0f1728;
+            --glass:rgba(255,255,255,.08);
+            --glass2:rgba(255,255,255,.15);
+            --white:#ffffff;
+            --text:#dddddd;
+            --gray:#a5a5a5;
+            --shadow:0 20px 45px rgba(0,0,0,.30);
+            --radius:22px;
+            --transition:.4s ease;
+        }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family:'Poppins',sans-serif;
+            background: linear-gradient(180deg, #07111d, #0b1729, #07111d);
+            color:white;
+            overflow-x:hidden;
+        }
+        ::-webkit-scrollbar { width:10px; }
+        ::-webkit-scrollbar-track { background:#09131f; }
+        ::-webkit-scrollbar-thumb { background:linear-gradient(var(--primary),var(--secondary)); border-radius:50px; }
+        ::-webkit-scrollbar-thumb:hover { background:var(--accent); }
+        
+        /* LOADER */
+        #loader {
+            position:fixed; inset:0; background:#06101b; display:flex; flex-direction:column;
+            justify-content:center; align-items:center; z-index:99999; transition:.8s;
+        }
+        .loader-ring {
+            width:90px; height:90px; border-radius:50%; border:6px solid rgba(255,255,255,.12);
+            border-top:6px solid var(--primary); animation:spin 1s linear infinite; margin-bottom:25px;
+        }
+        #loader h1 {
+            font-size:42px; font-family:'Outfit',sans-serif;
+            background:linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        @keyframes spin { from { transform:rotate(0); } to { transform:rotate(360deg); } }
+        
+        /* HEADER */
+        header {
+            position:fixed; top:0; width:100%; z-index:1000; transition:var(--transition);
+        }
+        header.scrolled {
+            background:rgba(15,25,40,.8); backdrop-filter:blur(20px);
+            border-bottom:1px solid rgba(255,255,255,.08); padding:15px 0;
+        }
+        nav {
+            width:90%; margin:auto; display:flex; justify-content:space-between;
+            align-items:center; padding:20px 0;
+        }
+        .logo { display:flex; align-items:center; gap:8px; font-size:24px; font-weight:700;
+            font-family:'Outfit',sans-serif; color:var(--primary); }
+        .navLinks { display:flex; gap:40px; list-style:none; }
+        .navLinks a { color:var(--text); transition:var(--transition); }
+        .navLinks a:hover { color:var(--primary); }
+        .navButtons { display:flex; gap:15px; }
+        .loginBtn, .bookBtn {
+            padding:12px 24px; border:none; border-radius:50px; cursor:pointer;
+            font-weight:600; transition:var(--transition);
+        }
+        .loginBtn { background:transparent; color:white; border:1px solid rgba(255,255,255,.2); }
+        .loginBtn:hover { border-color:var(--primary); color:var(--primary); }
+        .bookBtn {
+            background:linear-gradient(135deg, var(--primary), var(--secondary));
+            color:white; box-shadow:0 10px 25px rgba(76,201,240,.25);
+        }
+        .bookBtn:hover { transform:translateY(-3px); }
+        .menu { display:none; cursor:pointer; font-size:24px; color:white; }
+        
+        @media(max-width:768px) {
+            .navLinks { display:none; }
+            .navButtons { display:none; }
+            .menu { display:block; }
+            .navLinks.active {
+                display:flex; flex-direction:column; position:absolute; top:70px; left:0;
+                width:100%; background:rgba(15,25,40,.95); backdrop-filter:blur(20px);
+                padding:30px 0; gap:20px; border-bottom:1px solid rgba(255,255,255,.08);
+            }
+        }
+        
+        /* HERO */
+        .hero {
+            height:100vh; display:flex; flex-direction:column; justify-content:center;
+            align-items:center; background:linear-gradient(135deg, #1a1f3a 0%, #0f1729 100%);
+            position:relative; overflow:hidden;
+        }
+        .heroOverlay {
+            position:absolute; inset:0;
+            background:radial-gradient(circle at center, rgba(76,201,240,.1) 0%, transparent 100%);
+            z-index:1;
+        }
+        .heroContent {
+            position:relative; z-index:5; text-align:center; color:white;
+        }
+        .heroBadge {
+            display:inline-block; padding:12px 24px; background:rgba(255,255,255,.08);
+            border:1px solid rgba(76,201,240,.3); border-radius:50px; margin-bottom:30px;
+            font-size:14px; color:var(--primary);
+        }
+        .heroContent h1 {
+            font-size:4.5rem; font-family:'Outfit',sans-serif; margin-bottom:30px;
+        }
+        .heroContent h1 span {
+            background:linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .heroContent p {
+            font-size:1.1rem; color:var(--text); max-width:600px; margin:0 auto 50px;
+        }
+        .heroButtons { display:flex; gap:25px; justify-content:center; flex-wrap:wrap; }
+        .exploreBtn, .watchBtn {
+            padding:16px 40px; border:none; border-radius:50px; cursor:pointer;
+            font-weight:600; font-size:16px; transition:var(--transition);
+        }
+        .exploreBtn {
+            background:linear-gradient(135deg, var(--primary), var(--secondary));
+            color:white; box-shadow:0 15px 35px rgba(76,201,240,.3);
+        }
+        .exploreBtn:hover { transform:translateY(-5px); }
+        .watchBtn {
+            background:transparent; color:white; border:2px solid var(--primary);
+            display:flex; align-items:center; gap:10px;
+        }
+        
+        /* SEARCH PANEL */
+        .searchPanel {
+            position:absolute; bottom:60px; left:50%; transform:translateX(-50%);
+            display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;
+            padding:30px; background:rgba(255,255,255,.08); backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,.15); border-radius:20px; z-index:10;
+            min-width:90%; max-width:1000px;
+        }
+        .searchItem { display:flex; flex-direction:column; }
+        .searchItem label {
+            font-size:12px; font-weight:600; color:var(--primary); margin-bottom:8px;
+            text-transform:uppercase; letter-spacing:1px;
+        }
+        .searchItem input, .searchItem select {
+            padding:12px 16px; background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12); border-radius:10px; color:white;
+            font-size:14px; font-family:inherit; transition:var(--transition);
+            position: relative; z-index: 10;
+        }
+        .searchItem select option {
+            background: #0f1728;
+            color: white;
+            padding: 10px;
+        }
+        .searchItem input:focus, .searchItem select:focus {
+            outline:none; border-color:var(--primary); background:rgba(76,201,240,.1);
+            z-index: 100;
+        }
+        .searchBtn {
+            padding:12px 30px; background:linear-gradient(135deg, var(--primary), var(--secondary));
+            border:none; border-radius:10px; color:white; cursor:pointer; font-weight:600;
+            transition:var(--transition); align-self:flex-end;
+            box-shadow:0 10px 25px rgba(76,201,240,.25);
+        }
+        .searchBtn:hover { transform:translateY(-3px); }
+        
+        @media(max-width:1024px) { .searchPanel { grid-template-columns:repeat(2, 1fr); } }
+        @media(max-width:768px) { .searchPanel { grid-template-columns:1fr; bottom:20px; } }
+        
+        /* SECTIONS */
+        section { width:90%; margin:auto; }
+        .sectionHeading {
+            text-align:center; margin-bottom:70px;
+        }
+        .sectionHeading span {
+            display:inline-block; color:var(--primary); font-weight:600;
+            letter-spacing:2px; text-transform:uppercase; margin-bottom:12px;
+        }
+        .sectionHeading h2 {
+            font-size:3rem; font-family:'Outfit',sans-serif; margin-bottom:18px;
+        }
+        .sectionHeading p {
+            max-width:650px; margin:auto; color:var(--text); line-height:1.8;
+        }
+        
+        /* STATS */
+        .stats {
+            display:grid; grid-template-columns:repeat(4, 1fr); gap:30px;
+            padding:80px 0; margin-bottom:80px;
+        }
+        .statCard {
+            text-align:center; padding:40px; background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12); border-radius:20px;
+            transition:var(--transition);
+        }
+        .statCard:hover {
+            background:rgba(76,201,240,.1); border-color:var(--primary);
+            transform:translateY(-10px);
+        }
+        .statIcon { font-size:40px; color:var(--primary); margin-bottom:20px; }
+        .statCard h2 { font-size:2.5rem; font-family:'Outfit',sans-serif; margin-bottom:10px; }
+        
+        /* PROPERTIES */
+        .featured { padding:80px 0; margin-bottom:80px; }
+        .propertyGrid {
+            display:grid; grid-template-columns:repeat(3, 1fr); gap:30px;
+        }
+        .propertyCard {
+            background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+            border-radius:20px; overflow:hidden; transition:var(--transition); cursor:pointer;
+        }
+        .propertyCard:hover {
+            transform:translateY(-10px); background:rgba(76,201,240,.12);
+            border-color:var(--primary);
+        }
+        .propertyImage {
+            height:250px; position:relative; overflow:hidden;
+        }
+        .propertyImage img {
+            width:100%; height:100%; object-fit:cover; transition:var(--transition);
+        }
+        .propertyCard:hover .propertyImage img {
+            transform:scale(1.05);
+        }
+        .propertyImage .favorite {
+            position:absolute; top:15px; right:15px; width:40px; height:40px;
+            border-radius:50%; background:rgba(255,77,141,.2); border:1px solid var(--accent);
+            color:var(--accent); cursor:pointer; transition:var(--transition);
+            display:flex; align-items:center; justify-content:center; font-size:18px;
+        }
+        .propertyImage .favorite:hover {
+            background:rgba(255,77,141,.4); transform:scale(1.1);
+        }
+        .propertyImage .tag {
+            position:absolute; top:15px; left:15px; padding:8px 16px;
+            background:linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius:20px; font-size:12px; font-weight:600;
+        }
+        .propertyContent { padding:25px; }
+        .propertyContent .location {
+            display:flex; align-items:center; gap:5px; color:var(--text);
+            font-size:14px; margin-bottom:10px;
+        }
+        .propertyContent h3 {
+            font-size:20px; font-family:'Outfit',sans-serif; margin-bottom:10px;
+            font-weight:600;
+        }
+        .propertyContent p {
+            color:var(--text); font-size:14px; line-height:1.5; margin-bottom:15px;
+        }
+        .rating {
+            display:flex; align-items:center; gap:8px; color:var(--gold);
+            font-size:14px; margin-bottom:15px; padding-bottom:15px;
+            border-bottom:1px solid rgba(255,255,255,.1);
+        }
+        .priceRow {
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .priceRow h4 { font-size:24px; font-weight:700; color:var(--primary); }
+        .priceRow span { color:var(--text); font-size:13px; }
+        .priceRow button {
+            padding:10px 20px; background:linear-gradient(135deg, var(--primary), var(--secondary));
+            border:none; border-radius:20px; color:white; cursor:pointer;
+            font-weight:600; font-size:13px; transition:var(--transition);
+        }
+        .priceRow button:hover { transform:translateY(-2px); }
+        
+        @media(max-width:1024px) { .propertyGrid { grid-template-columns:repeat(2, 1fr); } }
+        @media(max-width:768px) { .propertyGrid { grid-template-columns:1fr; } }
+        
+        /* DESTINATIONS */
+        .destinations { padding:80px 0; margin-bottom:80px; }
+        .destinationGrid {
+            display:grid; grid-template-columns:repeat(3, 1fr); gap:30px;
+        }
+        .destinationCard {
+            position:relative; height:300px; border-radius:20px; overflow:hidden;
+            transition:var(--transition); cursor:pointer;
+        }
+        .destinationCard img {
+            width:100%; height:100%; object-fit:cover; transition:var(--transition);
+        }
+        .destinationCard:hover img { transform:scale(1.1); }
+        .destinationCard::before {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(180deg, transparent 0%, rgba(0,0,0,.8) 100%);
+            z-index:2;
+        }
+        .destinationInfo {
+            position:absolute; bottom:0; left:0; right:0; z-index:3;
+            padding:30px; color:white;
+        }
+        .destinationInfo h3 {
+            font-size:24px; font-family:'Outfit',sans-serif; margin-bottom:8px;
+            font-weight:600;
+        }
+        .destinationInfo p { font-size:14px; color:rgba(255,255,255,.8); }
+        .destinationInfo .tag {
+            display:inline-block; margin-top:10px; padding:6px 12px;
+            background:var(--primary); border-radius:20px; font-size:12px;
+            font-weight:600;
+        }
+        
+        @media(max-width:768px) { .destinationGrid { grid-template-columns:repeat(2, 1fr); } }
+        
+        /* WHY CHOOSE US */
+        .whyChoose {
+            padding:80px 0; margin-bottom:80px;
+        }
+        .chooseGrid {
+            display:grid; grid-template-columns:repeat(3, 1fr); gap:40px;
+        }
+        .chooseItem {
+            text-align:center;
+        }
+        .chooseItem i {
+            font-size:50px; color:var(--primary); margin-bottom:20px;
+        }
+        .chooseItem h3 {
+            font-size:22px; font-family:'Outfit',sans-serif; margin-bottom:15px;
+            font-weight:600;
+        }
+        .chooseItem p {
+            color:var(--text); line-height:1.8; margin-bottom:20px;
+        }
+        .chooseItem button {
+            padding:12px 30px; border:none; border-radius:50px;
+            background:linear-gradient(135deg, var(--primary), var(--secondary));
+            color:white; cursor:pointer; font-weight:600; transition:var(--transition);
+        }
+        .chooseItem button:hover { transform:translateY(-3px); }
+        
+        @media(max-width:768px) { .chooseGrid { grid-template-columns:1fr; } }
+        
+        /* TESTIMONIALS */
+        .testimonials { padding:80px 0; margin-bottom:80px; }
+        .testimonialGrid {
+            display:grid; grid-template-columns:repeat(3, 1fr); gap:30px;
+        }
+        .testimonialCard {
+            padding:30px; background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12); border-radius:20px;
+            transition:var(--transition);
+        }
+        .testimonialCard:hover {
+            background:rgba(76,201,240,.1); border-color:var(--primary);
+            transform:translateY(-5px);
+        }
+        .testimonialHeader {
+            display:flex; align-items:center; gap:15px; margin-bottom:15px;
+        }
+        .testimonialAvatar {
+            width:60px; height:60px; border-radius:50%;
+            background:linear-gradient(135deg, var(--primary), var(--secondary));
+            display:flex; align-items:center; justify-content:center;
+            color:white; font-size:24px; font-weight:bold;
+        }
+        .testimonialName {
+            font-family:'Outfit',sans-serif; font-weight:600;
+        }
+        .testimonialTitle {
+            color:var(--text); font-size:13px;
+        }
+        .testimonialText {
+            color:var(--text); line-height:1.8; font-style:italic; margin-bottom:15px;
+        }
+        .testimonialRating {
+            color:var(--gold);
+        }
+        
+        @media(max-width:768px) { .testimonialGrid { grid-template-columns:1fr; } }
+        
+        /* FAQ */
+        .faq { padding:80px 0; margin-bottom:80px; }
+        .faqContainer {
+            max-width:700px; margin:auto;
+        }
+        .faqItem {
+            margin-bottom:20px; background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12); border-radius:15px;
+            overflow:hidden;
+        }
+        .faqQuestion {
+            width:100%; padding:20px; background:transparent; border:none;
+            cursor:pointer; display:flex; justify-content:space-between;
+            align-items:center; text-align:left; color:white; font-weight:600;
+            transition:var(--transition);
+        }
+        .faqQuestion:hover {
+            background:rgba(76,201,240,.1); color:var(--primary);
+        }
+        .faqQuestion i { transition:var(--transition); }
+        .faqItem.active .faqQuestion i { transform:rotate(45deg); }
+        .faqAnswer {
+            max-height:0; overflow:hidden; transition:max-height .35s ease;
+            padding:0 20px; color:var(--text); line-height:1.8;
+        }
+        .faqItem.active .faqAnswer {
+            max-height:500px; padding:0 20px 20px;
+        }
+        
+        /* BOOKING */
+        .bookingSection {
+            padding:80px 0; margin-bottom:80px;
+        }
+        .bookingForm {
+            max-width:700px; margin:auto; background:rgba(255,255,255,.08);
+            padding:40px; border-radius:20px; border:1px solid rgba(255,255,255,.12);
+        }
+        .formGroup {
+            margin-bottom:25px;
+        }
+        .formGroup label {
+            display:block; margin-bottom:10px; font-weight:600; color:var(--primary);
+        }
+        .formGroup input, .formGroup select, .formGroup textarea {
+            width:100%; padding:15px; background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12); border-radius:10px;
+            color:white; font-family:inherit; font-size:14px; transition:var(--transition);
+        }
+        .formGroup input:focus, .formGroup select:focus, .formGroup textarea:focus {
+            outline:none; border-color:var(--primary); background:rgba(76,201,240,.1);
+        }
+        .formGroup textarea {
+            resize:vertical; min-height:120px;
+        }
+        .submitBtn {
+            width:100%; padding:15px; background:linear-gradient(135deg, var(--primary), var(--secondary));
+            border:none; border-radius:10px; color:white; cursor:pointer;
+            font-weight:600; font-size:16px; transition:var(--transition);
+        }
+        .submitBtn:hover { transform:translateY(-3px); }
+        
+        /* GALLERY */
+        .gallerySection { padding:80px 0; margin-bottom:80px; }
+        .galleryGrid {
+            display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;
+        }
+        .galleryGrid img {
+            width:100%; height:250px; object-fit:cover; border-radius:15px;
+            cursor:pointer; transition:var(--transition);
+        }
+        .galleryGrid img:hover {
+            transform:scale(1.05); filter:brightness(1.1);
+        }
+        
+        @media(max-width:768px) { .galleryGrid { grid-template-columns:repeat(2, 1fr); } }
+        
+        /* FOOTER */
+        footer {
+            background:rgba(15,25,40,.8); backdrop-filter:blur(20px);
+            border-top:1px solid rgba(255,255,255,.08); padding:60px 0 30px;
+            margin-top:80px;
+        }
+        .footerContainer {
+            width:90%; margin:auto; display:grid; grid-template-columns:repeat(4, 1fr);
+            gap:50px; padding-bottom:40px; border-bottom:1px solid rgba(255,255,255,.08);
+        }
+        .footerColumn h2, .footerColumn h3 { margin-bottom:20px; color:white; }
+        .footerColumn a {
+            display:block; margin-bottom:10px; color:var(--text);
+            transition:var(--transition);
+        }
+        .footerColumn a:hover { color:var(--primary); transform:translateX(5px); }
+        .footerBottom {
+            width:90%; margin:auto; text-align:center; padding-top:30px; color:var(--text);
+        }
+        
+        @media(max-width:768px) { .footerContainer { grid-template-columns:repeat(2, 1fr); } }
+        
+        /* TOAST */
+        #toast {
+            position:fixed; top:100px; right:30px; min-width:320px; padding:20px 24px;
+            border-radius:18px; background:rgba(15,25,40,.95); color:white;
+            border-left:5px solid var(--primary); backdrop-filter:blur(15px);
+            transform:translateX(400px); transition:.45s; z-index:9999;
+            display:flex; align-items:center; gap:12px;
+        }
+        #toast.show { transform:translateX(0); }
+        
+        /* BACK TO TOP */
+        .backToTop {
+            position:fixed; right:30px; bottom:110px; width:60px; height:60px;
+            border-radius:50%; border:none; cursor:pointer;
+            background:linear-gradient(135deg, var(--primary), var(--secondary));
+            color:#fff; font-size:22px; display:flex;
+            justify-content:center; align-items:center;
+            box-shadow:0 15px 35px rgba(76,201,240,.35);
+            opacity:0; visibility:hidden; transform:translateY(30px);
+            transition:.4s; z-index:999;
+        }
+        .backToTop.show { opacity:1; visibility:visible; transform:translateY(0); }
+        
+        /* BUTTON RIPPLE */
+        button { position:relative; overflow:hidden; }
+        button::after {
+            content:""; position:absolute; width:0; height:0; border-radius:50%;
+            background:rgba(255,255,255,.35); transform:translate(-50%,-50%); transition:.6s;
+        }
+        button:active::after { width:350px; height:350px; }
+        
+        /* CURSOR */
+        .cursor, .cursor2 { display:none; }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="loader-ring"></div>
+        <h1>StayScape</h1>
+        <p>Preparing your next adventure...</p>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <nav>
+            <div class="logo"><i class="fa-solid fa-house"></i><span>StayScape</span></div>
+            <ul class="navLinks">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#featured">Explore</a></li>
+                <li><a href="#destinations">Destinations</a></li>
+                <li><a href="#faq">Help</a></li>
+                <li><a href="#footer">Contact</a></li>
+            </ul>
+            <div class="navButtons">
+                <button class="loginBtn">Sign In</button>
+                <button class="bookBtn">Book Now</button>
+            </div>
+            <div class="menu"><i class="fa-solid fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="heroOverlay"></div>
+        <div class="heroContent">
+            <div class="heroBadge"><i class="fa-solid fa-location-dot"></i> Trusted by 150,000+ Travelers</div>
+            <h1>Escape Into<span> Luxury Living</span></h1>
+            <p>Discover extraordinary villas, beach houses, mountain cabins and unforgettable travel experiences around the world.</p>
+            <div class="heroButtons">
+                <button class="exploreBtn">Explore Stays</button>
+                <button class="watchBtn"><i class="fa-solid fa-play"></i> Watch Video</button>
+            </div>
+        </div>
+
+        <!-- SEARCH PANEL -->
+        <div class="searchPanel">
+            <div class="searchItem">
+                <label>Destination</label>
+                <input type="text" id="searchDest" placeholder="Where are you going?">
+            </div>
+            <div class="searchItem">
+                <label>Check In</label>
+                <input type="date" id="checkIn">
+            </div>
+            <div class="searchItem">
+                <label>Check Out</label>
+                <input type="date" id="checkOut">
+            </div>
+            <div class="searchItem">
+                <label>Guests</label>
+                <select id="guests">
+                    <option>1 Guest</option>
+                    <option>2 Guests</option>
+                    <option>3 Guests</option>
+                    <option>4 Guests</option>
+                    <option>5 Guests</option>
+                    <option>6 Guests</option>
+                </select>
+            </div>
+            <button class="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats" id="explore">
+        <div class="statCard">
+            <div class="statIcon"><i class="fa-solid fa-house"></i></div>
+            <h2 class="counter" data-target="2500">0</h2>
+            <p>Luxury Properties</p>
+        </div>
+        <div class="statCard">
+            <div class="statIcon"><i class="fa-solid fa-earth-americas"></i></div>
+            <h2 class="counter" data-target="180">0</h2>
+            <p>Destinations</p>
+        </div>
+        <div class="statCard">
+            <div class="statIcon"><i class="fa-solid fa-face-smile"></i></div>
+            <h2><span class="counter" data-target="98">0</span>%</h2>
+            <p>Happy Guests</p>
+        </div>
+        <div class="statCard">
+            <div class="statIcon"><i class="fa-solid fa-award"></i></div>
+            <h2><span class="counter" data-target="14">0</span></h2>
+            <p>Years Experience</p>
+        </div>
+    </section>
+
+    <!-- FEATURED -->
+    <section class="featured" id="featured">
+        <div class="sectionHeading">
+            <span>Premium Collection</span>
+            <h2>Featured Luxury Homes</h2>
+            <p>Handpicked luxury accommodations carefully selected for unforgettable vacations.</p>
+        </div>
+        <div class="propertyGrid" id="propertyGrid">
+            <!-- Properties loaded here -->
+        </div>
+    </section>
+
+    <!-- DESTINATIONS -->
+    <section class="destinations" id="destinations">
+        <div class="sectionHeading">
+            <span>Popular Destinations</span>
+            <h2>Where to Go</h2>
+            <p>Explore our most popular vacation destinations around the world.</p>
+        </div>
+        <div class="destinationGrid" id="destGrid">
+            <!-- Destinations loaded here -->
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="whyChoose">
+        <div class="sectionHeading">
+            <span>Why Choose Us</span>
+            <h2>Experience Excellence</h2>
+        </div>
+        <div class="chooseGrid">
+            <div class="chooseItem">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h3>Secure Bookings</h3>
+                <p>100% secure payment and booking protection for your peace of mind.</p>
+                <button class="learnMore">Learn More</button>
+            </div>
+            <div class="chooseItem">
+                <i class="fa-solid fa-headset"></i>
+                <h3>24/7 Support</h3>
+                <p>Dedicated customer support available round the clock to assist you.</p>
+                <button class="learnMore">Learn More</button>
+            </div>
+            <div class="chooseItem">
+                <i class="fa-solid fa-star"></i>
+                <h3>Best Prices</h3>
+                <p>Guaranteed lowest prices with no hidden fees or surprises.</p>
+                <button class="learnMore">Learn More</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="gallerySection">
+        <div class="sectionHeading">
+            <span>Our Properties</span>
+            <h2>Gallery Showcase</h2>
+        </div>
+        <div class="galleryGrid" id="galleryGrid">
+            <!-- Gallery images loaded here -->
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials">
+        <div class="sectionHeading">
+            <span>Guest Stories</span>
+            <h2>What Guests Say</h2>
+        </div>
+        <div class="testimonialGrid">
+            <div class="testimonialCard">
+                <div class="testimonialHeader">
+                    <div class="testimonialAvatar">SK</div>
+                    <div>
+                        <div class="testimonialName">Sarah Knight</div>
+                        <div class="testimonialTitle">Verified Guest</div>
+                    </div>
+                </div>
+                <div class="testimonialRating">⭐⭐⭐⭐⭐</div>
+                <p class="testimonialText">"Absolutely incredible experience! The villa was more beautiful than the photos. Perfect for our honeymoon!"</p>
+            </div>
+            <div class="testimonialCard">
+                <div class="testimonialHeader">
+                    <div class="testimonialAvatar">MJ</div>
+                    <div>
+                        <div class="testimonialName">Michael Johnson</div>
+                        <div class="testimonialTitle">Verified Guest</div>
+                    </div>
+                </div>
+                <div class="testimonialRating">⭐⭐⭐⭐⭐</div>
+                <p class="testimonialText">"Outstanding service and attention to detail. The team went above and beyond to make our stay perfect!"</p>
+            </div>
+            <div class="testimonialCard">
+                <div class="testimonialHeader">
+                    <div class="testimonialAvatar">EC</div>
+                    <div>
+                        <div class="testimonialName">Emma Chen</div>
+                        <div class="testimonialTitle">Verified Guest</div>
+                    </div>
+                </div>
+                <div class="testimonialRating">⭐⭐⭐⭐⭐</div>
+                <p class="testimonialText">"Best vacation ever! Highly recommend StayScape for luxury stays. Will definitely book again!"</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOOKING -->
+    <section class="bookingSection">
+        <div class="sectionHeading">
+            <span>Ready to Book</span>
+            <h2>Book Your Perfect Escape</h2>
+        </div>
+        <form class="bookingForm" id="bookingForm">
+            <div class="formGroup">
+                <label>Full Name *</label>
+                <input type="text" required>
+            </div>
+            <div class="formGroup">
+                <label>Email Address *</label>
+                <input type="email" required>
+            </div>
+            <div class="formGroup">
+                <label>Property *</label>
+                <select required>
+                    <option>Select a property</option>
+                    <option>Maldives Beach Villa</option>
+                    <option>Alpine Mountain Cabin</option>
+                    <option>Tuscany Villa Retreat</option>
+                    <option>Bali Beachfront Estate</option>
+                    <option>Iceland Geothermal Lodge</option>
+                    <option>Paris City Apartment</option>
+                </select>
+            </div>
+            <div class="formGroup">
+                <label>Check-in Date *</label>
+                <input type="date" required>
+            </div>
+            <div class="formGroup">
+                <label>Check-out Date *</label>
+                <input type="date" required>
+            </div>
+            <div class="formGroup">
+                <label>Number of Guests *</label>
+                <select required>
+                    <option>1 Guest</option>
+                    <option>2 Guests</option>
+                    <option>3 Guests</option>
+                    <option>4 Guests</option>
+                    <option>5+ Guests</option>
+                </select>
+            </div>
+            <div class="formGroup">
+                <label>Special Requests</label>
+                <textarea placeholder="Any special requests or preferences?"></textarea>
+            </div>
+            <button type="submit" class="submitBtn">Complete Booking</button>
+        </form>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="sectionHeading">
+            <span>Need Help</span>
+            <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faqContainer">
+            <div class="faqItem">
+                <button class="faqQuestion">How do I book a property? <i class="fa-solid fa-plus"></i></button>
+                <div class="faqAnswer"><p>Search for your preferred destination, select available dates, choose guests, and complete the booking securely with our payment system.</p></div>
+            </div>
+            <div class="faqItem">
+                <button class="faqQuestion">Are all properties verified? <i class="fa-solid fa-plus"></i></button>
+                <div class="faqAnswer"><p>Yes. Every listing is personally reviewed and verified before appearing on StayScape to ensure quality and authenticity.</p></div>
+            </div>
+            <div class="faqItem">
+                <button class="faqQuestion">What is the cancellation policy? <i class="fa-solid fa-plus"></i></button>
+                <div class="faqAnswer"><p>Cancellation depends on the property's booking policy. Most properties offer flexible cancellation up to 14 days before arrival.</p></div>
+            </div>
+            <div class="faqItem">
+                <button class="faqQuestion">How do I get support? <i class="fa-solid fa-plus"></i></button>
+                <div class="faqAnswer"><p>Our 24/7 support team is available via email, phone, and chat to help with any questions or concerns.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <div class="footerContainer">
+            <div class="footerColumn">
+                <h2><i class="fa-solid fa-house"></i> StayScape</h2>
+                <p>Discover unique vacation rentals, luxury villas, and unforgettable stays around the world with StayScape.</p>
+            </div>
+            <div class="footerColumn">
+                <h3>Quick Links</h3>
+                <a href="#hero">Home</a>
+                <a href="#featured">Explore</a>
+                <a href="#destinations">Destinations</a>
+                <a href="#faq">Help</a>
+            </div>
+            <div class="footerColumn">
+                <h3>Support</h3>
+                <a href="#faq">FAQ</a>
+                <a href="#footer">Cancellation Policy</a>
+                <a href="#footer">Privacy Policy</a>
+                <a href="#footer">Terms & Conditions</a>
+            </div>
+            <div class="footerColumn">
+                <h3>Contact</h3>
+                <p><i class="fa-solid fa-location-dot"></i> Kochi, Kerala, India</p>
+                <p><i class="fa-solid fa-phone"></i> +91 98765 43210</p>
+                <p><i class="fa-solid fa-envelope"></i> hello@stayscape.demo</p>
+            </div>
+        </div>
+        <div class="footerBottom">
+            <p>© 2026 StayScape. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- BACK TO TOP -->
+    <button class="backToTop" id="backToTop" aria-label="Back to Top"><i class="fa-solid fa-arrow-up"></i></button>
+
+    <!-- TOAST -->
+    <div id="toast"><i class="fa-solid fa-circle-check"></i><span>Success!</span></div>
+
+    <script>
+        "use strict";
+
+        // LOADER
+        window.addEventListener("load", () => {
+            const loader = document.getElementById("loader");
+            if(loader) {
+                setTimeout(() => {
+                    loader.style.opacity = "0";
+                    loader.style.visibility = "hidden";
+                }, 1200);
+            }
+        });
+
+        // HEADER SCROLL
+        const header = document.querySelector("header");
+        window.addEventListener("scroll", () => {
+            if(window.scrollY > 60) {
+                header.classList.add("scrolled");
+            } else {
+                header.classList.remove("scrolled");
+            }
+        });
+
+        // MOBILE MENU
+        const menu = document.querySelector(".menu");
+        const navLinks = document.querySelector(".navLinks");
+        if(menu) {
+            menu.addEventListener("click", () => {
+                navLinks.classList.toggle("active");
+            });
+        }
+
+        document.querySelectorAll(".navLinks a").forEach(link => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("active");
+            });
+        });
+
+        // NAVIGATION LINKS
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if(href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if(target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // TOAST FUNCTION
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>${msg}</span>`;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+
+        // PROPERTY DATA
+        const properties = [
+            { name: 'Maldives Beach Villa', loc: 'Maldives', price: 420, rating: 4.9, reviews: 560, img: 'https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?w=500&h=300&fit=crop', tag: 'Best Seller' },
+            { name: 'Alpine Mountain Cabin', loc: 'Switzerland', price: 360, rating: 4.8, reviews: 420, img: 'https://images.pexels.com/photos/1438761/pexels-photo-1438761.jpeg?w=500&h=300&fit=crop', tag: 'Popular' },
+            { name: 'Tuscany Villa Retreat', loc: 'Italy', price: 380, rating: 4.9, reviews: 480, img: 'https://images.pexels.com/photos/4256464/pexels-photo-4256464.jpeg?w=500&h=300&fit=crop', tag: 'Luxury' },
+            { name: 'Bali Beachfront Estate', loc: 'Indonesia', price: 300, rating: 4.7, reviews: 350, img: 'https://images.pexels.com/photos/3915857/pexels-photo-3915857.jpeg?w=500&h=300&fit=crop', tag: 'Top Rated' },
+            { name: 'Iceland Geothermal Lodge', loc: 'Iceland', price: 340, rating: 4.8, reviews: 390, img: 'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?w=500&h=300&fit=crop', tag: 'Editor\'s Pick' },
+            { name: 'Paris City Apartment', loc: 'France', price: 320, rating: 4.6, reviews: 410, img: 'https://images.pexels.com/photos/2062426/pexels-photo-2062426.jpeg?w=500&h=300&fit=crop', tag: 'Best Value' },
+        ];
+
+        // LOAD PROPERTIES
+        const propertyGrid = document.getElementById("propertyGrid");
+        properties.forEach(prop => {
+            const card = document.createElement("article");
+            card.className = "propertyCard";
+            card.innerHTML = `
+                <div class="propertyImage">
+                    <img src="${prop.img}" alt="${prop.name}" style="width:100%; height:100%; object-fit:cover;">
+                    <button class="favorite"><i class="fa-regular fa-heart"></i></button>
+                    <span class="tag">${prop.tag}</span>
+                </div>
+                <div class="propertyContent">
+                    <div class="location"><i class="fa-solid fa-location-dot"></i> ${prop.loc}</div>
+                    <h3>${prop.name}</h3>
+                    <p>Premium luxury accommodation with exceptional amenities and stunning views.</p>
+                    <div class="rating"><i class="fa-solid fa-star"></i> ${prop.rating} <span>(${prop.reviews} Reviews)</span></div>
+                    <div class="priceRow">
+                        <div><h4>$${prop.price}</h4><span>per night</span></div>
+                        <button class="bookBtn">Book Now</button>
+                    </div>
+                </div>
+            `;
+            propertyGrid.appendChild(card);
+
+            // Favorite button
+            card.querySelector(".favorite").addEventListener("click", function() {
+                this.innerHTML = this.innerHTML.includes("fa-regular") ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
+                showToast("❤️ Added to favourites!");
+            });
+
+            // Book button
+            card.querySelector(".bookBtn").addEventListener("click", () => {
+                showToast("✅ Property added to booking!");
+            });
+        });
+
+        // DESTINATIONS
+        const destinations = [
+            { name: 'Maldives', desc: 'Tropical Paradise', img: 'https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?w=500&h=400&fit=crop' },
+            { name: 'Switzerland', desc: 'Alpine Mountains', img: 'https://images.pexels.com/photos/1438761/pexels-photo-1438761.jpeg?w=500&h=400&fit=crop' },
+            { name: 'Italy', desc: 'Historic Charm', img: 'https://images.pexels.com/photos/4256464/pexels-photo-4256464.jpeg?w=500&h=400&fit=crop' },
+        ];
+
+        const destGrid = document.getElementById("destGrid");
+        destinations.forEach(dest => {
+            const card = document.createElement("div");
+            card.className = "destinationCard";
+            card.innerHTML = `
+                <img src="${dest.img}" alt="${dest.name}" style="width:100%; height:100%; object-fit:cover;">
+                <div class="destinationInfo">
+                    <h3>${dest.name}</h3>
+                    <p>${dest.desc}</p>
+                    <div class="tag">Explore</div>
+                </div>
+            `;
+            card.addEventListener("click", () => {
+                showToast(`🌍 Exploring ${dest.name}...`);
+                document.querySelector("#featured").scrollIntoView({ behavior: 'smooth' });
+            });
+            destGrid.appendChild(card);
+        });
+
+        // GALLERY
+        const gallery = [
+            'https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?w=400&h=300&fit=crop',
+            'https://images.pexels.com/photos/1438761/pexels-photo-1438761.jpeg?w=400&h=300&fit=crop',
+            'https://images.pexels.com/photos/4256464/pexels-photo-4256464.jpeg?w=400&h=300&fit=crop',
+            'https://images.pexels.com/photos/3915857/pexels-photo-3915857.jpeg?w=400&h=300&fit=crop',
+        ];
+
+        const galleryGrid = document.getElementById("galleryGrid");
+        gallery.forEach(img => {
+            const image = document.createElement("img");
+            image.src = img;
+            image.style.width = "100%";
+            image.style.height = "100%";
+            image.style.objectFit = "cover";
+            image.addEventListener("click", () => showToast("📸 Opening gallery view..."));
+            galleryGrid.appendChild(image);
+        });
+
+        // COUNTERS
+        const counters = document.querySelectorAll(".counter");
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(entry.target.getAttribute("data-target"));
+                    let current = 0;
+                    const increment = target / 50;
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            entry.target.innerText = Math.floor(current);
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            entry.target.innerText = target;
+                        }
+                    };
+                    updateCounter();
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        });
+        counters.forEach(c => counterObserver.observe(c));
+
+        // FAQ ACCORDION
+        document.querySelectorAll(".faqQuestion").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const item = this.parentElement;
+                document.querySelectorAll(".faqItem").forEach(i => i.classList.remove("active"));
+                item.classList.add("active");
+            });
+        });
+
+        // BUTTONS
+        const loginBtn = document.querySelector(".loginBtn");
+        if(loginBtn) {
+            loginBtn.addEventListener("click", () => {
+                showToast("🔐 Sign In - Redirecting to login page...");
+                console.log("Sign In clicked");
+            });
+        }
+
+        const navBookBtn = document.querySelector(".bookBtn");
+        if(navBookBtn) {
+            navBookBtn.addEventListener("click", () => {
+                document.querySelector("#bookingForm").scrollIntoView({ behavior: 'smooth' });
+                showToast("📅 Opening booking...");
+            });
+        }
+
+        const exploreBtn = document.querySelector(".exploreBtn");
+        if(exploreBtn) {
+            exploreBtn.addEventListener("click", () => {
+                document.querySelector("#featured").scrollIntoView({ behavior: 'smooth' });
+                showToast("🌍 Exploring properties...");
+            });
+        }
+
+        const watchBtn = document.querySelector(".watchBtn");
+        if(watchBtn) {
+            watchBtn.addEventListener("click", () => showToast("🎥 Video player opening..."));
+        }
+
+        const searchBtn = document.querySelector(".searchBtn");
+        if(searchBtn) {
+            searchBtn.addEventListener("click", () => {
+                const dest = document.getElementById("searchDest").value;
+                if(dest) {
+                    showToast(`🔍 Searching for "${dest}"...`);
+                    setTimeout(() => {
+                        document.querySelector("#featured").scrollIntoView({ behavior: 'smooth' });
+                    }, 500);
+                } else {
+                    showToast("⚠️ Please enter a destination!");
+                }
+            });
+        }
+
+        document.querySelectorAll(".learnMore").forEach(btn => {
+            btn.addEventListener("click", () => showToast("📚 Learn More - Opening details..."));
+        });
+
+        // BOOKING FORM
+        document.getElementById("bookingForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            showToast("✅ Booking confirmed! Check your email.");
+        });
+
+        // BACK TO TOP
+        const backToTop = document.getElementById("backToTop");
+        window.addEventListener("scroll", () => {
+            if(window.scrollY > 500) {
+                backToTop.classList.add("show");
+            } else {
+                backToTop.classList.remove("show");
+            }
+        });
+        backToTop.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // WELCOME
+        window.addEventListener("load", () => {
+            setTimeout(() => showToast("🏡 Welcome to StayScape!"), 1800);
+        });
+
+        console.log("%cStayScape Loaded ✔", "color:#4cc9f0;font-size:16px;font-weight:bold;");
+    </script>
+
+</body>
+</html>
+stayscape-final_4.html
+Displaying stayscape-final_4.html.
